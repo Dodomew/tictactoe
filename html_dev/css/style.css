@@ -1,0 +1,35 @@
+body {
+  font-family: Helvetica;
+  background-color: beige;
+  font-size: 67.5%;
+}
+
+td {
+  padding: 1em 1.5em;
+  text-align: center;
+  border: 1px solid black;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.tile-container {
+  width: 350px;
+  height: 350px;
+  margin: auto;
+}
+
+.tile {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  line-height: 100px;
+  margin-bottom: 2px;
+  font-size: 2rem;
+}
+
+/*# sourceMappingURL=style.css.map */
