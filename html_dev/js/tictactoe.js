@@ -11,45 +11,69 @@
 
 'use strict';
 
-// Listen to which tile gets clicked
-document.addEventListener('click', function objectFinder(event)
+(function() // avoid global vars
 {
-  let e = window.event || event;
-  let targetId = e.srcElement.id;
-  let targetClass = e.srcElement.className.split(" ")[0]; // http://stackoverflow.com/questions/11606897/get-only-first-class-of-an-html-element
-  console.log(e.target);
-
-  if(targetClass === "tile")
+  // Listen to which tile gets clicked
+  document.addEventListener('click', function objectFinder(event)
   {
-    // console.log(targetClass);
-    for (var i = 0; i < targetClass.length; i++)
+    let e = window.event || event;
+    let targetId = e.srcElement.id;
+    let targetClass = e.srcElement.className.split(" ")[0]; // http://stackoverflow.com/questions/11606897/get-only-first-class-of-an-html-element
+
+    var tileInnerText = document.getElementById(targetId);
+
+    if(tileInnerText.innerHTML == "")
     {
-      if(targetClass[i].innerHTML == "")
+      checkWhoIsNext(tileInnerText);
+      /*
+      if(checkWhoIsNext() == 0)
       {
-        console.log("tile is empty")
+        tileInnerText.innerHTML = "O";
       }
       else
       {
-          console.log("tile is not empty")
-      }
+        tileInnerText.innerHTML = "X";
+      }*/
     }
+
+  }),
+  false;
+
+  var state = [['x', 'o', null], ['x', 'x', 'o'], ['o', 'x', null]];
+
+  var turnCounter = 0;
+  function checkWhoIsNext(clickedElement)
+  {
+    if(turnCounter % 2 == 0 || turnCounter == 0)
+    {
+      console.log("It is X turn");
+      clickedElement.innerHTML = "X";
+    }
+    else
+    {
+      console.log("It is O turn");
+      clickedElement.innerHTML = "O";
+    }
+
+    turnCounter++;
+    console.log(turnCounter);
+    return(turnCounter);
   }
 
-}), false;
+  function populate(board)
+  {
 
-var state = [['x', 'o', null], ['x', 'x', 'o'], ['o', 'x', null]];
+  }
 
-function populate(board)
-{
+  function nextPlayer(board)
+  {
 
-}
+  }
 
-function nextPlayer(board)
-{
+  function findWinner(board)
+  {
 
-}
+  }
 
-function findWinner(board)
-{
-
-}
+})
+();
