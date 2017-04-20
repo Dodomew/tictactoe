@@ -13,6 +13,11 @@
 
 (function() // avoid global vars
 {
+  var amountOfTiles = 9;
+  var tileArray = [];
+
+  createTiles();
+
   // Listen to which tile gets clicked
   document.addEventListener('click', function objectFinder(event)
   {
@@ -25,15 +30,6 @@
     if(tileInnerText.innerHTML == "")
     {
       checkWhoIsNext(tileInnerText);
-      /*
-      if(checkWhoIsNext() == 0)
-      {
-        tileInnerText.innerHTML = "O";
-      }
-      else
-      {
-        tileInnerText.innerHTML = "X";
-      }*/
     }
 
   }),
@@ -42,9 +38,10 @@
   var state = [['x', 'o', null], ['x', 'x', 'o'], ['o', 'x', null]];
 
   var turnCounter = 0;
+
   function checkWhoIsNext(clickedElement)
   {
-    if(turnCounter % 2 == 0 || turnCounter == 0)
+    if(turnCounter % 2 == 0)
     {
       console.log("It is X turn");
       clickedElement.innerHTML = "X";
@@ -56,8 +53,33 @@
     }
 
     turnCounter++;
-    console.log(turnCounter);
+
+    for (var i = 0; i < tileArray.length; i++)
+    {
+      if(tileArray[0].innerHTML && tileArray[1].innerHTML && tileArray[2].innerHTML === "X") // anders een switch state maken
+      {
+        console.log("X has won");
+      }
+      else
+      {
+        console.log("No match")
+      }
+    }
+    console.log(tileArray.indexOf("X"));
     return(turnCounter);
+  }
+
+  function createTiles()
+  {
+    for (var i = 0; i < amountOfTiles; i++)
+    {
+      var tileContainer = document.getElementById("tile-container");
+      var tile = document.createElement("div");
+      tile.setAttribute("class", "tile");
+      tile.setAttribute("id", "tile-" + i);
+      tileContainer.appendChild(tile);
+      tileArray.push(tile);
+    }
   }
 
   function populate(board)
