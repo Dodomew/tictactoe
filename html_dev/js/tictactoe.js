@@ -35,8 +35,6 @@
   }),
   false;
 
-  var state = [['x', 'o', null], ['x', 'x', 'o'], ['o', 'x', null]];
-
   var turnCounter = 0;
 
   function checkWhoIsNext(clickedElement)
@@ -51,23 +49,12 @@
       console.log("It is O turn");
       clickedElement.innerHTML = "O";
     }
-
     turnCounter++;
-
-    for (var i = 0; i < tileArray.length; i++)
-    {
-      if(tileArray[0].innerHTML && tileArray[1].innerHTML && tileArray[2].innerHTML === "X") // anders een switch state maken
-      {
-        console.log("X has won");
-      }
-      else
-      {
-        console.log("No match")
-      }
-    }
-    console.log(tileArray.indexOf("X"));
-    return(turnCounter);
+    findWinner(tileArray);
   }
+
+  console.log(tileArray.indexOf("X"));
+  return(turnCounter);
 
   function createTiles()
   {
@@ -92,10 +79,47 @@
 
   }
 
-  function findWinner(board)
+  function findWinner(tileArray)
   {
-
+    for (var i = 0; i < tileArray.length; i++)
+    {
+      if(tileArray[0].innerHTML && tileArray[1].innerHTML && tileArray[2].innerHTML === "X") // anders een switch state maken
+      {
+        console.log("X has won");
+      }
+      else if (tileArray[3].innerHTML && tileArray[4].innerHTML && tileArray[5].innerHTML === "X")
+      {
+        console.log("X has won");
+      }
+      else if (tileArray[6].innerHTML && tileArray[7].innerHTML && tileArray[8].innerHTML === "X")
+      {
+        console.log("X has won");
+      }
+      else if (tileArray[0].innerHTML && tileArray[3].innerHTML && tileArray[6].innerHTML === "X")
+      {
+        console.log("X has won");
+      }
+      else if (tileArray[1].innerHTML && tileArray[4].innerHTML && tileArray[7].innerHTML === "X")
+      {
+        console.log("X has won");
+      }
+      else if (tileArray[2].innerHTML && tileArray[5].innerHTML && tileArray[8].innerHTML === "X")
+      {
+        console.log("X has won");
+      }
+      else if (tileArray[0].innerHTML && tileArray[4].innerHTML && tileArray[8].innerHTML === "X")
+      {
+        console.log("X has won");
+      }
+      else if (tileArray[2].innerHTML && tileArray[4].innerHTML && tileArray[6].innerHTML === "X")
+      {
+        console.log("X has won");
+      }
+      else
+      {
+        console.log("No match")
+      }
   }
-
+}
 })
 ();
