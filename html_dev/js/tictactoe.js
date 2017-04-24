@@ -119,6 +119,15 @@
       {
         console.log("No match")
       }
+
+      /*
+
+      for(var i = 0; i <= tileArray.length; i++)
+      {
+        tileArray[i]
+      }
+
+      */
   }
 }
 })
