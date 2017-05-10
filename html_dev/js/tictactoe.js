@@ -15,6 +15,7 @@
 {
   var amountOfTiles = 9;
   var tileArray = [];
+  var turnCounter = 0;
 
   createTiles();
 
@@ -35,39 +36,7 @@
   }),
   false;
 
-  var turnCounter = 0;
-
-  function checkWhoIsNext(clickedElement)
-  {
-    if(turnCounter % 2 == 0)
-    {
-      console.log("It is X turn");
-      clickedElement.innerHTML = "X";
-    }
-    else
-    {
-      console.log("It is O turn");
-      clickedElement.innerHTML = "O";
-    }
-    turnCounter++;
-    findWinner(tileArray);
-  }
-
-  console.log(tileArray.indexOf("X"));
   return(turnCounter);
-
-  function createTiles()
-  {
-    for (var i = 0; i < amountOfTiles; i++)
-    {
-      var tileContainer = document.getElementById("tile-container");
-      var tile = document.createElement("div");
-      tile.setAttribute("class", "tile");
-      tile.setAttribute("id", "tile-" + i);
-      tileContainer.appendChild(tile);
-      tileArray.push(tile);
-    }
-  }
 
   function populate(board)
   {
@@ -79,7 +48,7 @@
 
   }
 
-  function findWinner(tileArray)
+  /*function findWinner(tileArray)
   {
     for (var i = 0; i < tileArray.length; i++)
     {
@@ -119,16 +88,131 @@
       {
         console.log("No match")
       }
+    }
+  }
+*/
 
-      /*
-
-      for(var i = 0; i <= tileArray.length; i++)
-      {
-        tileArray[i]
-      }
-
-      */
+function createTiles()
+{
+  for (var i = 0; i < amountOfTiles; i++)
+  {
+    var tileContainer = document.getElementById("tile-container");
+    var tile = document.createElement("div");
+    tile.setAttribute("class", "tile");
+    tile.setAttribute("id", "tile-" + i);
+    tileContainer.appendChild(tile);
+    tileArray.push(tile);
   }
 }
+
+function checkWhoIsNext(clickedElement)
+{
+  if(turnCounter % 2 == 0)
+  {
+    console.log("It is X turn");
+    clickedElement.innerHTML = "X";
+  }
+  else
+  {
+    console.log("It is O turn");
+    clickedElement.innerHTML = "O";
+  }
+  turnCounter++;
+  isHorizontalTilesWinner(tileArray);
+  isVerticalTilesWinner(tileArray);
+  isDiagonalLeftToRightTilesWinner(tileArray);
+  isDiagonalRightToLeftTilesWinner(tileArray);
+}
+
+function isHorizontalTilesWinner(arrayOfTilesToCheck)
+{
+  // check tiles horizontal for win per row
+  for (let i = 0; i < arrayOfTilesToCheck.length; i += 3)
+  {
+    // i = 0
+    // tileArray[i + 0] = tile 0
+    // tileArray[i + 1] = tile 1
+    // tileArray[i + 2] = tile 2
+    let firstTile = arrayOfTilesToCheck[i];
+    let secondTile = arrayOfTilesToCheck[i + 1];
+    let thirdTile = arrayOfTilesToCheck[i + 2];
+
+    let firstTileInput = firstTile.innerHTML;
+    let secondTileInput = secondTile.innerHTML;
+    let thirdTileInput = thirdTile.innerHTML;
+
+    if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
+    {
+      if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
+      {
+        console.log((firstTileInput) + " has won horizontally!");
+      }
+    }
+  }
+}
+
+function isVerticalTilesWinner(arrayOfTilesToCheck)
+{
+  // check tiles vertical per column
+  for (let i = 0; i < 3; i++)
+  {
+    let firstTile = arrayOfTilesToCheck[i];
+    let secondTile = arrayOfTilesToCheck[i + 3];
+    let thirdTile = arrayOfTilesToCheck[i + 6];
+
+    let firstTileInput = firstTile.innerHTML;
+    let secondTileInput = secondTile.innerHTML;
+    let thirdTileInput = thirdTile.innerHTML;
+
+    if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
+    {
+      if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
+      {
+        console.log((firstTileInput) + " has won vertically!");
+      }
+    }
+  }
+}
+
+function isDiagonalLeftToRightTilesWinner(arrayOfTilesToCheck)
+{
+  // check tiles diagonally from upperleft to lowerright
+    let firstTile = arrayOfTilesToCheck[0];
+    let secondTile = arrayOfTilesToCheck[4];
+    let thirdTile = arrayOfTilesToCheck[8];
+
+    let firstTileInput = firstTile.innerHTML;
+    let secondTileInput = secondTile.innerHTML;
+    let thirdTileInput = thirdTile.innerHTML;
+
+    if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
+    {
+      if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
+      {
+        console.log((firstTileInput) + " has won diagonally from upperleft to lowerright!");
+      }
+    }
+}
+
+function isDiagonalRightToLeftTilesWinner(arrayOfTilesToCheck)
+{
+  // check tiles diagonally from lowerleft to upperright
+  let firstTile = arrayOfTilesToCheck[2];
+  let secondTile = arrayOfTilesToCheck[4];
+  let thirdTile = arrayOfTilesToCheck[6];
+
+  let firstTileInput = firstTile.innerHTML;
+  let secondTileInput = secondTile.innerHTML;
+  let thirdTileInput = thirdTile.innerHTML;
+
+  if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
+  {
+    if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
+    {
+      console.log((firstTileInput) + " has won diagonally from lowerleft to upperright!");
+    }
+  }
+}
+
 })
 ();
