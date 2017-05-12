@@ -16,126 +16,99 @@
   var amountOfTiles = 9;
   var tileArray = [];
   var turnCounter = 0;
+  var isWinner = false;
 
   createTiles();
 
   // Listen to which tile gets clicked
-  document.addEventListener('click', function objectFinder(event)
+  document.addEventListener('click', objectFinder, false);
+
+  return(turnCounter);
+
+//////////* FUNCTION DECLARATIONS *//////////
+
+  function createTiles()
+  {
+    for (var i = 0; i < amountOfTiles; i++)
+    {
+      var tileContainer = document.getElementById("tile-container");
+      var tile = document.createElement("div");
+      tile.setAttribute("class", "tile");
+      tile.setAttribute("id", "tile-" + i);
+      tileContainer.appendChild(tile);
+      tileArray.push(tile);
+    }
+  }
+
+  function objectFinder(event)
   {
     let e = window.event || event;
     let targetId = e.srcElement.id;
     let targetClass = e.srcElement.className.split(" ")[0]; // http://stackoverflow.com/questions/11606897/get-only-first-class-of-an-html-element
-
     var tileInnerText = document.getElementById(targetId);
 
-    if(tileInnerText.innerHTML == "")
+    if(tileInnerText.innerHTML == "" && isWinner == false)
     {
       checkWhoIsNext(tileInnerText);
     }
-
-  }),
-  false;
-
-  return(turnCounter);
-
-  function populate(board)
-  {
-
   }
 
-  function nextPlayer(board)
+  function checkWhoIsNext(clickedElement)
   {
-
-  }
-
-  /*function findWinner(tileArray)
-  {
-    for (var i = 0; i < tileArray.length; i++)
+    if(turnCounter % 2 == 0)
     {
-      if(tileArray[0].innerHTML && tileArray[1].innerHTML && tileArray[2].innerHTML === "X") // anders een switch state maken
+      console.log("It is X turn");
+      clickedElement.innerHTML = "X";
+    }
+    else
+    {
+      console.log("It is O turn");
+      clickedElement.innerHTML = "O";
+    }
+    turnCounter++;
+
+    isHorizontalVerticalWinner(tileArray, tileArray.length, 3, 0, 1, 2, " has won horizontally!");
+    isHorizontalVerticalWinner(tileArray, 3, 1, 0, 3, 6, " has won vertically!");
+    isDiagonalWinner(tileArray, 0, 4, 8, " has won diagonally from upperleft to lowerright!");
+    isDiagonalWinner(tileArray, 2, 4, 6, " has won diagonally from lowerleft to upperright!");
+
+    if(isWinner)
+    {
+      document.removeEventListener('click', objectFinder, true);
+      console.log("winner");
+      return;
+    }
+  }
+
+  function isHorizontalVerticalWinner(arrayOfTilesToCheck, forLoopComparison, forLoopIncrement, firstTileIndex, secondTileIndex, thirdTileIndex, strWinnerText)
+  {
+    for (let i = 0; i < forLoopComparison; i += forLoopIncrement)
+    {
+      let firstTile = arrayOfTilesToCheck[i + firstTileIndex];
+      let secondTile = arrayOfTilesToCheck[i + secondTileIndex];
+      let thirdTile = arrayOfTilesToCheck[i + thirdTileIndex];
+
+      let firstTileInput = firstTile.innerHTML;
+      let secondTileInput = secondTile.innerHTML;
+      let thirdTileInput = thirdTile.innerHTML;
+
+      if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
       {
-        console.log("X has won");
-      }
-      else if (tileArray[3].innerHTML && tileArray[4].innerHTML && tileArray[5].innerHTML === "X")
-      {
-        console.log("X has won");
-      }
-      else if (tileArray[6].innerHTML && tileArray[7].innerHTML && tileArray[8].innerHTML === "X")
-      {
-        console.log("X has won");
-      }
-      else if (tileArray[0].innerHTML && tileArray[3].innerHTML && tileArray[6].innerHTML === "X")
-      {
-        console.log("X has won");
-      }
-      else if (tileArray[1].innerHTML && tileArray[4].innerHTML && tileArray[7].innerHTML === "X")
-      {
-        console.log("X has won");
-      }
-      else if (tileArray[2].innerHTML && tileArray[5].innerHTML && tileArray[8].innerHTML === "X")
-      {
-        console.log("X has won");
-      }
-      else if (tileArray[0].innerHTML && tileArray[4].innerHTML && tileArray[8].innerHTML === "X")
-      {
-        console.log("X has won");
-      }
-      else if (tileArray[2].innerHTML && tileArray[4].innerHTML && tileArray[6].innerHTML === "X")
-      {
-        console.log("X has won");
-      }
-      else
-      {
-        console.log("No match")
+        if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
+        {
+          console.log((firstTileInput) + strWinnerText);
+          isWinner = true;
+          return;
+        }
       }
     }
   }
-*/
 
-function createTiles()
-{
-  for (var i = 0; i < amountOfTiles; i++)
+  function isDiagonalWinner(arrayOfTilesToCheck, firstTileIndex, secondTileIndex, thirdTileIndex,strWinnerText)
   {
-    var tileContainer = document.getElementById("tile-container");
-    var tile = document.createElement("div");
-    tile.setAttribute("class", "tile");
-    tile.setAttribute("id", "tile-" + i);
-    tileContainer.appendChild(tile);
-    tileArray.push(tile);
-  }
-}
-
-function checkWhoIsNext(clickedElement)
-{
-  if(turnCounter % 2 == 0)
-  {
-    console.log("It is X turn");
-    clickedElement.innerHTML = "X";
-  }
-  else
-  {
-    console.log("It is O turn");
-    clickedElement.innerHTML = "O";
-  }
-  turnCounter++;
-  isHorizontalTilesWinner(tileArray);
-  isVerticalTilesWinner(tileArray);
-  isDiagonalLeftToRightTilesWinner(tileArray);
-  isDiagonalRightToLeftTilesWinner(tileArray);
-}
-
-function isHorizontalTilesWinner(arrayOfTilesToCheck)
-{
-  // check tiles horizontal for win per row
-  for (let i = 0; i < arrayOfTilesToCheck.length; i += 3)
-  {
-    // i = 0
-    // tileArray[i + 0] = tile 0
-    // tileArray[i + 1] = tile 1
-    // tileArray[i + 2] = tile 2
-    let firstTile = arrayOfTilesToCheck[i];
-    let secondTile = arrayOfTilesToCheck[i + 1];
-    let thirdTile = arrayOfTilesToCheck[i + 2];
+    let firstTile = arrayOfTilesToCheck[firstTileIndex];
+    let secondTile = arrayOfTilesToCheck[secondTileIndex];
+    let thirdTile = arrayOfTilesToCheck[thirdTileIndex];
 
     let firstTileInput = firstTile.innerHTML;
     let secondTileInput = secondTile.innerHTML;
@@ -145,74 +118,12 @@ function isHorizontalTilesWinner(arrayOfTilesToCheck)
     {
       if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
       {
-        console.log((firstTileInput) + " has won horizontally!");
+        console.log((firstTileInput) + strWinnerText);
+        isWinner = true;
+        return;
       }
     }
+
   }
-}
-
-function isVerticalTilesWinner(arrayOfTilesToCheck)
-{
-  // check tiles vertical per column
-  for (let i = 0; i < 3; i++)
-  {
-    let firstTile = arrayOfTilesToCheck[i];
-    let secondTile = arrayOfTilesToCheck[i + 3];
-    let thirdTile = arrayOfTilesToCheck[i + 6];
-
-    let firstTileInput = firstTile.innerHTML;
-    let secondTileInput = secondTile.innerHTML;
-    let thirdTileInput = thirdTile.innerHTML;
-
-    if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
-    {
-      if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
-      {
-        console.log((firstTileInput) + " has won vertically!");
-      }
-    }
-  }
-}
-
-function isDiagonalLeftToRightTilesWinner(arrayOfTilesToCheck)
-{
-  // check tiles diagonally from upperleft to lowerright
-    let firstTile = arrayOfTilesToCheck[0];
-    let secondTile = arrayOfTilesToCheck[4];
-    let thirdTile = arrayOfTilesToCheck[8];
-
-    let firstTileInput = firstTile.innerHTML;
-    let secondTileInput = secondTile.innerHTML;
-    let thirdTileInput = thirdTile.innerHTML;
-
-    if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
-    {
-      if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
-      {
-        console.log((firstTileInput) + " has won diagonally from upperleft to lowerright!");
-      }
-    }
-}
-
-function isDiagonalRightToLeftTilesWinner(arrayOfTilesToCheck)
-{
-  // check tiles diagonally from lowerleft to upperright
-  let firstTile = arrayOfTilesToCheck[2];
-  let secondTile = arrayOfTilesToCheck[4];
-  let thirdTile = arrayOfTilesToCheck[6];
-
-  let firstTileInput = firstTile.innerHTML;
-  let secondTileInput = secondTile.innerHTML;
-  let thirdTileInput = thirdTile.innerHTML;
-
-  if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
-  {
-    if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
-    {
-      console.log((firstTileInput) + " has won diagonally from lowerleft to upperright!");
-    }
-  }
-}
-
 })
 ();
