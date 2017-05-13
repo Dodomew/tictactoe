@@ -17,6 +17,7 @@
   var tileArray = [];
   var turnCounter = 0;
   var isWinner = false;
+  var gameMessage = document.getElementById("game-message");
 
   createTiles();
 
@@ -57,13 +58,15 @@
   {
     if(turnCounter % 2 == 0)
     {
-      console.log("It is X turn");
+      console.log("It is now O's turn");
       clickedElement.innerHTML = "X";
+      gameMessage.innerHTML = "It is now O's turn.";
     }
     else
     {
-      console.log("It is O turn");
+      console.log("It is now X's turn");
       clickedElement.innerHTML = "O";
+      gameMessage.innerHTML = "It is now X's turn.";
     }
     turnCounter++;
 
@@ -97,6 +100,7 @@
         if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
         {
           console.log((firstTileInput) + strWinnerText);
+          gameMessage.innerHTML = firstTileInput + " has won the game!";
           isWinner = true;
           return;
         }
@@ -119,6 +123,7 @@
       if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
       {
         console.log((firstTileInput) + strWinnerText);
+        gameMessage.innerHTML = firstTileInput + " has won the game!";
         isWinner = true;
         return;
       }

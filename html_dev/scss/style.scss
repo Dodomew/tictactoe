@@ -5,24 +5,33 @@ body
   font-size: 67.5%;
 }
 
-td
+// http://stackoverflow.com/questions/618097/how-do-you-easily-horizontally-center-a-div-using-css
+.header-project-title
 {
-  padding: 1em 1.5em;
   text-align: center;
-  border: 1px solid black;
 }
 
-table
+h1
 {
-  border-collapse: collapse;
+  font-size: 3rem;
+  display: inline-block;
 }
 
 .tile-container
 {
   width: 350px;
   height: 350px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   margin: auto;
 
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-flow: row wrap;
 }
 
 .tile
@@ -35,5 +44,11 @@ table
   text-align: center;
   line-height: 100px;
   margin: 2px;
+  font-size: 2rem;
+}
+
+.game-message
+{
+  text-align: center;
   font-size: 2rem;
 }
