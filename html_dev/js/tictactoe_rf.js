@@ -13,44 +13,34 @@
 
 (function() // avoid global vars
 {
+  var GameState = { IN_PROGRESS : 0, X_WIN : 1, O_WIN : 2, DRAW : 3 }
+  var PlayerTurn = { X : 0, O : 1 }
+
   var amountOfTiles = 9;
   var tileArray = [];
-  var gameMessage = document.getElementById("game-message");
-
-  var GameState =
-  {
-    IN_PROGRESS : 0,
-    X_WINS : 1,
-    O_WINS : 2,
-    DRAW : 3,
-  };
-
-  var PlayerTurn =
-  {
-    X_TURN : 0,
-    O_TURN : 1,
-  }
-
+  var playerTurn = PlayerTurn.X;
   var gameState = GameState.IN_PROGRESS;
-  var playerTurn = PlayerTurn.X_TURN;
 
   createTiles();
 
+  // Listen to which tile gets clicked
   document.addEventListener('click', objectFinder, false);
+
+  return(turnCounter);
 
 //////////* FUNCTION DECLARATIONS *//////////
 
   function createTiles()
   {
     let tileContainer = document.getElementById("tile-container");
-
+	
     for (let i = 0; i < amountOfTiles; i++)
     {
       let tile = document.createElement("div");
       tile.setAttribute("class", "tile");
       tile.setAttribute("id", "tile-" + i);
-
-      tileContainer.appendChild(tile);
+	  
+      tileContainer.appendChild(tile);	  
       tileArray.push(tile);
     }
   }
@@ -60,101 +50,79 @@
     let e = window.event || event;
     let targetId = e.srcElement.id;
     let targetClass = e.srcElement.className.split(" ")[0]; // http://stackoverflow.com/questions/11606897/get-only-first-class-of-an-html-element
-    let tileInnerElement = document.getElementById(targetId);
+    let tileElement = document.getElementById(targetId);
 
-    if(tileInnerElement.innerHTML == "" && gameState == GameState.IN_PROGRESS)
+    if(tileElement.innerHTML == "" && gameState == GameState.IN_PROGRESS)
     {
-      checkWhoIsNext(tileInnerElement);
+      checkWhoIsNext(tileElement);
     }
   }
 
   function checkWhoIsNext(clickedElement)
   {
-    if(playerTurn == PlayerTurn.X_TURN)
+    if(playerTurn == PlayerTurn.X)
     {
+      console.log("It is X turn");
       clickedElement.innerHTML = "X";
-      gameMessage.innerHTML = "It is now O's turn.";
-      playerTurn = PlayerTurn.O_TURN;
+	  playerTurn = PlayerTurn.O;
     }
     else
     {
+      console.log("It is O turn");
       clickedElement.innerHTML = "O";
-      gameMessage.innerHTML = "It is now X's turn.";
-      playerTurn = PlayerTurn.X_TURN;
+	  playerTurn = PlayerTurn.X;
     }
-
-    whoIsWinner();
-  }
-
-  function whoIsWinner()
-  {
-    let resultHorizontalWinner = isHorizontalWinner();
-    let resultVerticalWinner = isVerticalWinner();
-    let resultDiagonalOneWinner = isDiagonalWinner(0, 4, 8);
-    let resultDiagonalTwoWinner = isDiagonalWinner(2, 4, 6);
-    let resultGameDraw = isGameDraw();
-
-    if(resultGameDraw == true)
+	
+	let result1 = isHorizontalWinner();
+	let result2 = isVerticalWinner();
+	let result3 = isDiagonalWinner(0, 4, 8);
+    let result4 = isDiagonalWinner(2, 4, 6);
+	
+	//isHorizontalVerticalWinner(tileArray, tileArray.length, 3, 0, 1, 2, " has won horizontally!");
+    //isHorizontalVerticalWinner(tileArray, 3, 1, 0, 3, 6, " has won vertically!");
+    //isDiagonalWinner(tileArray, 0, 4, 8, " has won diagonally from upperleft to lowerright!");
+    //isDiagonalWinner(tileArray, 2, 4, 6, " has won diagonally from lowerleft to upperright!");
+	
+    if(result1 || resulte2 || result3 || result4)
     {
-      gameState = GameState.DRAW;
-      gameMessage.innerHTML = "This game ended in a draw!";
-    }
-
-    if(resultHorizontalWinner || resultVerticalWinner || resultDiagonalOneWinner || resultDiagonalTwoWinner)
-    {
+		gameState = GameState.GAME_OVER;
       document.removeEventListener('click', objectFinder, true);
-
-      if(playerTurn == PlayerTurn.X_TURN)
-      {
-        gameState = GameState.O_WINS;
-        gameMessage.innerHTML = "O has won!";
-      }
-      else
-      {
-        gameState = GameState.X_WINS;
-        gameMessage.innerHTML = "X has won!";
-      }
+      console.log("winner");
+      return;
     }
   }
-
+  
   function isHorizontalWinner()
   {
-    // skip rows
+	//Skips rows
     for (let i = 0; i < tileArray.length; i += 3)
     {
       let firstTileInput = tileArray[i + 0].innerHTML;
       let secondTileInput = tileArray[i + 1].innerHTML;
       let thirdTileInput = tileArray[i + 2].innerHTML;
-
+			  
       if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
       {
-        if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
-        {
-          return true;
-        }
+        return firstTileInput === secondTileInput && secondTileInput === thirdTileInput;
       }
     }
   }
-
+  
   function isVerticalWinner()
   {
-    // skip columns
+	//Skips columns
     for (let i = 0; i < 3; i++)
     {
-      let firstTileInput = tileArray[i+ 0].innerHTML;
+      let firstTileInput = tileArray[i + 0].innerHTML;
       let secondTileInput = tileArray[i + 3].innerHTML;
       let thirdTileInput = tileArray[i + 6].innerHTML;
-
+			  
       if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
       {
-        if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
-        {
-          return true;
-        }
+        return firstTileInput === secondTileInput && secondTileInput === thirdTileInput;
       }
     }
   }
-
   function isDiagonalWinner(firstTileIndex, secondTileIndex, thirdTileIndex)
   {
     let firstTileInput = tileArray[firstTileIndex].innerHTML;
@@ -163,23 +131,8 @@
 
     if(firstTileInput != "" || secondTileInput != "" || thirdTileInput != "")
     {
-      if(firstTileInput === secondTileInput && secondTileInput === thirdTileInput)
-      {
-        return true;
-      }
+      return firstTileInput === secondTileInput && secondTileInput === thirdTileInput;
     }
-  }
-
-  function isGameDraw()
-  {
-    for (let i = 0; i < tileArray.length; i++)
-    {
-      if(tileArray[i].innerHTML == "")
-      {
-        return false;
-      }
-    }
-    return true;
   }
 })
 ();
