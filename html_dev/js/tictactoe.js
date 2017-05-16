@@ -70,20 +70,24 @@
 
   function checkWhoIsNext(clickedElement)
   {
-    if(playerTurn == PlayerTurn.X_TURN)
+    if(clickedElement.innerHTML == "")
     {
-      clickedElement.innerHTML = "X";
-      gameMessage.innerHTML = "It is now O's turn.";
-      playerTurn = PlayerTurn.O_TURN;
+      if(playerTurn == PlayerTurn.X_TURN)
+      {
+        clickedElement.innerHTML = "X";
+        clickedElement.className += " tile-x";
+        gameMessage.innerHTML = "It is now O's turn.";
+        playerTurn = PlayerTurn.O_TURN;
+      }
+      else
+      {
+        clickedElement.innerHTML = "O";
+        clickedElement.className += " tile-o";
+        gameMessage.innerHTML = "It is now X's turn.";
+        playerTurn = PlayerTurn.X_TURN;
+      }
+      whoIsWinner();
     }
-    else
-    {
-      clickedElement.innerHTML = "O";
-      gameMessage.innerHTML = "It is now X's turn.";
-      playerTurn = PlayerTurn.X_TURN;
-    }
-
-    whoIsWinner();
   }
 
   function whoIsWinner()
