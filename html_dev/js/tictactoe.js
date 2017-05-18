@@ -16,6 +16,7 @@
   var amountOfTiles = 9;
   var tileArray = [];
   var gameMessage = document.getElementById("game-message");
+  var gameMessageSheep = document.getElementById("game-message-sheep");
 
   var GameState =
   {
@@ -72,19 +73,15 @@
   {
     if(clickedElement.innerHTML == "")
     {
+      var randomTransformDegrees = getRandomInt(1,359);
+
       if(playerTurn == PlayerTurn.X_TURN)
       {
-        clickedElement.innerHTML = "X";
-        clickedElement.className += " tile-x";
-        gameMessage.innerHTML = "It is now O's turn.";
-        playerTurn = PlayerTurn.O_TURN;
+        playerXTurn(clickedElement, randomTransformDegrees);
       }
       else
       {
-        clickedElement.innerHTML = "O";
-        clickedElement.className += " tile-o";
-        gameMessage.innerHTML = "It is now X's turn.";
-        playerTurn = PlayerTurn.X_TURN;
+        playerOTurn(clickedElement, randomTransformDegrees);
       }
       whoIsWinner();
     }
@@ -111,12 +108,14 @@
       if(playerTurn == PlayerTurn.X_TURN)
       {
         gameState = GameState.O_WINS;
-        gameMessage.innerHTML = "O has won!";
+        gameMessageSheep.className = " tile-o";
+        gameMessage.innerHTML = " has won!";
       }
       else
       {
         gameState = GameState.X_WINS;
-        gameMessage.innerHTML = "X has won!";
+        gameMessageSheep.className = " tile-x";
+        gameMessage.innerHTML = " has won!";
       }
     }
   }
@@ -184,6 +183,31 @@
       }
     }
     return true;
+  }
+
+  function getRandomInt(min, max)
+  {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function playerXTurn(clickedElement, randomTransformDegrees)
+  {
+    clickedElement.innerHTML = "<span>X</span>";
+    clickedElement.className += " tile-x";
+    clickedElement.style.transform = "rotate(" + randomTransformDegrees +"deg)";
+    gameMessage.innerHTML = "is now on the play.";
+    gameMessageSheep.className = " tile-o";
+    playerTurn = PlayerTurn.O_TURN;
+  }
+
+  function playerOTurn(clickedElement,randomTransformDegrees)
+  {
+    clickedElement.innerHTML = "<span>O</span>";
+    clickedElement.className += " tile-o";
+    clickedElement.style.transform = "rotate(" + randomTransformDegrees +"deg)";
+    gameMessage.innerHTML = "is now on the play.";
+    gameMessageSheep.className = " tile-x";
+    playerTurn = PlayerTurn.X_TURN;
   }
 })
 ();

@@ -1,3 +1,9 @@
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: Helvetica;
   background-color: beige;
@@ -5,17 +11,23 @@ body {
 }
 
 .site-container {
-  background-image: url("../images/modern-wall3.jpg");
-  background-position: center;
-  background-size: cover;
+  background: linear-gradient(lightblue, darkblue);
+  background-image: url("../images/sheep_landscape.jpg");
+  margin: 0;
+  padding: 0;
 }
 
-.header-project-title {
-  width: 33.33%;
+.content-container {
+  width: 60%;
+  height: 100vh;
   margin: auto;
-  text-align: center;
-  background-color: grey;
-  padding: 1rem;
+  background-color: rgba(200, 200, 200, 0.5);
+}
+
+.test {
+  position: relative;
+  width: 100%;
+  margin-top: 2rem;
 }
 
 h1 {
@@ -26,17 +38,13 @@ h1 {
 .tile-container {
   width: 350px;
   height: 350px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   margin: auto;
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-flow: row wrap;
-  background-image: url("../images/wooden_tictactoe_board.jpg");
+  background-image: url("../images/grassland_board.jpg");
   background-size: cover;
   padding: 1rem;
   -webkit-box-shadow: 0px 0px 20px 1px #1f1f1f;
@@ -47,7 +55,6 @@ h1 {
 .tile {
   width: 100px;
   height: 100px;
-  border: 1px solid black;
   display: inline-block;
   vertical-align: top;
   text-align: center;
@@ -57,20 +64,41 @@ h1 {
 }
 
 .tile-x {
-  background-color: red;
+  background-image: url("../images/green_sheep.png");
+  background-size: cover;
+}
+
+.tile-x span {
+  opacity: 0;
 }
 
 .tile-o {
-  background-color: blue;
+  background-image: url("../images/gold_sheep.png");
+  background-size: cover;
+}
+
+.tile-o span {
+  opacity: 0;
 }
 
 .game-message {
-  width: 33.33%;
+  width: 100%;
   margin: auto;
   text-align: center;
-  font-size: 2rem;
-  background-color: grey;
+  background-color: mediumseagreen;
   padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+#game-message {
+  vertical-align: top;
+}
+
+.game-message span {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: inline-block;
 }
 
 /*# sourceMappingURL=style.css.map */
