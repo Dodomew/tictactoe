@@ -73,7 +73,7 @@
   {
     if(clickedElement.innerHTML == "")
     {
-      var randomTransformDegrees = getRandomInt(1,359);
+      var randomTransformDegrees = getRandomInt(0,35);
 
       if(playerTurn == PlayerTurn.X_TURN)
       {
@@ -187,7 +187,7 @@
 
   function getRandomInt(min, max)
   {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min) * 10);
   }
 
   function playerXTurn(clickedElement, randomTransformDegrees)

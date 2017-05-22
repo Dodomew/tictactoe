@@ -11,7 +11,6 @@ body {
 }
 
 .site-container {
-  background: linear-gradient(lightblue, darkblue);
   background-image: url("../images/sheep_landscape.jpg");
   margin: 0;
   padding: 0;
@@ -21,7 +20,9 @@ body {
   width: 60%;
   height: 100vh;
   margin: auto;
-  background-color: rgba(200, 200, 200, 0.5);
+  background-color: rgba(210, 233, 241, 0.75);
+  display: flex;
+  flex-flow: row wrap;
 }
 
 .test {
@@ -85,9 +86,11 @@ h1 {
   width: 100%;
   margin: auto;
   text-align: center;
-  background-color: mediumseagreen;
-  padding: 1rem;
-  border-radius: 0.5rem;
+  background-color: #6bb3e4;
+  background-image: radial-gradient(#7fbcff 15%, transparent 16%), radial-gradient(#98c5ff 15%, transparent 16%);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+  padding: 0.5rem 0 0.5rem 0;
 }
 
 #game-message {
