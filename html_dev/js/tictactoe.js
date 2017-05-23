@@ -49,10 +49,19 @@
     {
       let tile = document.createElement("div");
       tile.setAttribute("class", "tile");
-      tile.setAttribute("id", "tile-" + i);
+      tile.setAttribute("id", "tile-parent-" + i);
+
+      let tileInnerChild = document.createElement("div");
+      tileInnerChild.setAttribute("id", "tile-child-" + i);
+
+      let spanInnerChild = document.createElement("span");
+      spanInnerChild.setAttribute("class", "tile-userinput");
+
+      tile.appendChild(tileInnerChild);
+      tileInnerChild.appendChild(spanInnerChild);
 
       tileContainer.appendChild(tile);
-      tileArray.push(tile);
+      tileArray.push(spanInnerChild);
     }
   }
 
@@ -60,28 +69,28 @@
   {
     let e = window.event || event;
     let targetId = e.srcElement.id;
-    let targetClass = e.srcElement.className.split(" ")[0]; // http://stackoverflow.com/questions/11606897/get-only-first-class-of-an-html-element
-    let tileInnerElement = document.getElementById(targetId);
+    let tileInnerElement = document.getElementById(targetId).children[0];
+    let tileUserInput = tileInnerElement.children[0];
 
-    if(tileInnerElement.innerHTML == "" && gameState == GameState.IN_PROGRESS)
+    if(tileUserInput.innerHTML == "" && gameState == GameState.IN_PROGRESS)
     {
-      checkWhoIsNext(tileInnerElement);
+      checkWhoIsNext(tileInnerElement, tileUserInput);
     }
   }
 
-  function checkWhoIsNext(clickedElement)
+  function checkWhoIsNext(clickedElement, clickedElementUserInput)
   {
-    if(clickedElement.innerHTML == "")
+    if(clickedElementUserInput.innerHTML == "")
     {
       var randomTransformDegrees = getRandomInt(0,35);
 
       if(playerTurn == PlayerTurn.X_TURN)
       {
-        playerXTurn(clickedElement, randomTransformDegrees);
+        playerXTurn(clickedElement, clickedElementUserInput, randomTransformDegrees);
       }
       else
       {
-        playerOTurn(clickedElement, randomTransformDegrees);
+        playerOTurn(clickedElement, clickedElementUserInput, randomTransformDegrees);
       }
       whoIsWinner();
     }
@@ -144,7 +153,7 @@
     // skip columns
     for (let i = 0; i < 3; i++)
     {
-      let firstTileInput = tileArray[i+ 0].innerHTML;
+      let firstTileInput = tileArray[i + 0].innerHTML;
       let secondTileInput = tileArray[i + 3].innerHTML;
       let thirdTileInput = tileArray[i + 6].innerHTML;
 
@@ -190,24 +199,44 @@
     return Math.floor(Math.random() * (max - min) * 10);
   }
 
-  function playerXTurn(clickedElement, randomTransformDegrees)
+  function playerXTurn(clickedElement, clickedElementUserInput, randomTransformDegrees)
   {
-    clickedElement.innerHTML = "<span>X</span>";
-    clickedElement.className += " tile-x";
+    clickedElement.className += "tile-x";
+    clickedElementUserInput.innerHTML = "X";
+
     clickedElement.style.transform = "rotate(" + randomTransformDegrees +"deg)";
+
     gameMessage.innerHTML = "is now on the play.";
     gameMessageSheep.className = " tile-o";
+
     playerTurn = PlayerTurn.O_TURN;
   }
 
-  function playerOTurn(clickedElement,randomTransformDegrees)
+  function playerOTurn(clickedElement, clickedElementUserInput,randomTransformDegrees)
   {
-    clickedElement.innerHTML = "<span>O</span>";
-    clickedElement.className += " tile-o";
+    clickedElement.className += "tile-o";
+    clickedElementUserInput.innerHTML = "O";
+
     clickedElement.style.transform = "rotate(" + randomTransformDegrees +"deg)";
+
     gameMessage.innerHTML = "is now on the play.";
     gameMessageSheep.className = " tile-x";
+
     playerTurn = PlayerTurn.X_TURN;
+  }
+
+  function scaleIn(clickedElement)
+  {
+    setTimeout(function timerForScaleIn()
+    {
+      clickedElement.className += " scaled";
+    },
+    randomIntFromInterval(100, 500) * 1);
+  }
+
+  function randomIntFromInterval(min,max)
+  {
+      return Math.floor(Math.random()*(max-min+1)+min);
   }
 })
 ();
