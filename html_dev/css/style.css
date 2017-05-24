@@ -56,6 +56,7 @@ h1 {
 .tile {
   width: 100px;
   height: 100px;
+  position: relative;
   display: inline-block;
   vertical-align: top;
   text-align: center;
@@ -64,18 +65,45 @@ h1 {
   font-size: 2rem;
 }
 
-.tile-x {
+.tile-x, .tile-x-gamemessage, .tile-o-gamemessage {
   background-image: url("../images/green_sheep.png");
   background-size: cover;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+  -moz-transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+  -ms-transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+  transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
 }
 
-.tile-x span {
+.tile-x span, .tile-x-gamemessage span, .tile-o-gamemessage span {
   opacity: 0;
+}
+
+.tile-x-gamemessage, .tile-o-gamemessage {
+  top: 0;
+  left: 0;
+}
+
+.tile-o-gamemessage {
+  background-image: url("../images/gold_sheep.png");
 }
 
 .tile-o {
   background-image: url("../images/gold_sheep.png");
   background-size: cover;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+  -moz-transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+  -ms-transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
+  transition: width 0.2s, height 0.2s, top 0.2s, left 0.2s;
 }
 
 .tile-o span {
@@ -85,6 +113,44 @@ h1 {
 .scaled {
   width: 100px;
   height: 100px;
+  top: 0;
+  left: 0;
+}
+
+@-webkit-keyframes rotating {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.winning {
+  -webkit-animation: rotating 2s linear infinite;
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
 }
 
 .game-message {

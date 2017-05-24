@@ -1,3 +1,5 @@
+$scaleInSpeed : 0.2s;
+
 html
 {
   height: 100%;
@@ -68,6 +70,9 @@ h1
 {
   width: 100px;
   height: 100px;
+
+  position: relative;
+
   display: inline-block;
   vertical-align: top;
   text-align: center;
@@ -80,6 +85,17 @@ h1
 {
   background-image: url("../images/green_sheep.png");
   background-size: cover;
+  width: 0px;
+  height: 0px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  -webkit-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
+  -moz-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
+  -ms-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
+  transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
 }
 
 .tile-x span
@@ -87,10 +103,34 @@ h1
   opacity: 0;
 }
 
+.tile-x-gamemessage
+{
+  @extend .tile-x;
+  top: 0;
+  left: 0;
+}
+
+.tile-o-gamemessage
+{
+  @extend .tile-x-gamemessage;
+  background-image: url("../images/gold_sheep.png");
+}
+
 .tile-o
 {
   background-image: url("../images/gold_sheep.png");
   background-size: cover;
+  width: 0px;
+  height: 0px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  -webkit-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
+  -moz-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
+  -ms-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
+  transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
 }
 
 .tile-o span
@@ -102,6 +142,53 @@ h1
 {
   width: 100px;
   height: 100px;
+  top: 0;
+  left: 0;
+}
+
+@-webkit-keyframes rotating
+{
+  from
+  {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to
+  {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotating
+{
+  from
+  {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to
+  {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.winning
+{
+  -webkit-animation: rotating 2s linear infinite;
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
 }
 
 .game-message
