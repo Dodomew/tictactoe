@@ -238,7 +238,7 @@
 
     clickedElementUserInput.innerHTML = "X";
 
-    gameMessage.innerHTML = "is now on the play.";
+    gameMessage.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-o-gamemessage";
 
     playerTurn = PlayerTurn.O_TURN;
@@ -252,7 +252,7 @@
 
     clickedElementUserInput.innerHTML = "O";
 
-    gameMessage.innerHTML = "is now on the play.";
+    gameMessage.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-x-gamemessage";
 
     playerTurn = PlayerTurn.X_TURN;

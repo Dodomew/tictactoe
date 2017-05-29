@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Indie+Flower");
 html {
   height: 100%;
   margin: 0;
@@ -5,30 +6,34 @@ html {
 }
 
 body {
-  font-family: Helvetica;
+  font-family: 'Indie Flower', 'Helvetica', sans-serif;
   background-color: beige;
   font-size: 67.5%;
 }
 
 .site-container {
-  background-image: url("../images/sheep_landscape.jpg");
+  background-image: url("../images/bg-wood-04.jpg");
+  background-size: cover;
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .content-container {
-  width: 60%;
-  height: 100vh;
+  width: 80%;
+  height: 80%;
   margin: auto;
+  margin-top: 5rem;
   background-color: rgba(210, 233, 241, 0.75);
+  border-radius: 0.5rem;
   display: flex;
   flex-flow: row wrap;
 }
 
-.test {
+.parent-tile-container {
   position: relative;
   width: 100%;
-  margin-top: 2rem;
 }
 
 h1 {
@@ -68,8 +73,8 @@ h1 {
 .tile-x, .tile-x-gamemessage, .tile-o-gamemessage {
   background-image: url("../images/green_sheep.png");
   background-size: cover;
-  width: 0px;
-  height: 0px;
+  width: 150px;
+  height: 150px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -95,8 +100,8 @@ h1 {
 .tile-o {
   background-image: url("../images/gold_sheep.png");
   background-size: cover;
-  width: 0px;
-  height: 0px;
+  width: 150px;
+  height: 150px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -154,14 +159,11 @@ h1 {
 }
 
 .game-message {
-  width: 100%;
+  width: 60%;
   margin: auto;
   text-align: center;
-  background-color: #6bb3e4;
-  background-image: radial-gradient(#7fbcff 15%, transparent 16%), radial-gradient(#98c5ff 15%, transparent 16%);
-  background-size: 60px 60px;
-  background-position: 0 0, 30px 30px;
   padding: 0.5rem 0 0.5rem 0;
+  border-bottom: 2px dashed black;
 }
 
 #game-message {
@@ -173,6 +175,11 @@ h1 {
   height: 100px;
   position: relative;
   display: inline-block;
+}
+
+.footer-content {
+  margin: auto;
+  font-size: 2rem;
 }
 
 /*# sourceMappingURL=style.css.map */
