@@ -18,6 +18,9 @@
   var gameMessage = document.getElementById("game-message");
   var gameMessageSheep = document.getElementById("game-message-sheep");
 
+  var retryButton = document.getElementById("js-retry-button");
+  retryButton.addEventListener('click', tryAgain, false);
+
   var GameState =
   {
     IN_PROGRESS : 0,
@@ -40,6 +43,7 @@
   function createTiles()
   {
     let tileContainer = document.getElementById("tile-container");
+    tileContainer.innerHTML = ""; // for reset game
     tileContainer.addEventListener('click', objectFinder, false);
 
     for (let i = 0; i < amountOfTiles; i++)
@@ -75,6 +79,17 @@
     }
   }
 
+  function tryAgain()
+  {
+    retryButton.classList.add("js-disabled-button");
+    gameMessage.innerHTML = " starts.";
+    gameMessageSheep.className = "tile-x-gamemessage";
+    gameState = GameState.IN_PROGRESS;
+    playerTurn = PlayerTurn.X_TURN;
+    tileArray = []
+    createTiles();
+  }
+
   function checkWhoIsNext(clickedElement, clickedElementUserInput)
   {
     if(clickedElementUserInput.innerHTML == "")
@@ -89,6 +104,7 @@
       {
         playerOTurn(clickedElement, clickedElementUserInput, randomTransformDegrees);
       }
+      retryButton.classList.remove("js-disabled-button");
       whoIsWinner();
     }
   }

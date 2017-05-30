@@ -1,10 +1,76 @@
+// Animation speed for falling sheep
 $scaleInSpeed : 0.2s;
 
+// Media queries for responsive layout
+$min-mobile-size: 240px;
+$max-mobile-size: 767px;
+$min-tablet-size: 768px;
+$max-tablet-size: 1024px;
+$min-landscape-tablet-size: 1025px;
+$max-landscape-tablet-size: 1366px;
+$min-tablet-nexus-size: 600px;
+$max-tablet-nexus-size: 960px;
+
+/* Mobile phones */
+@mixin responsiveLayoutMobile
+{
+  @media (min-width: #{$min-mobile-size})
+    and (max-width: #{$max-mobile-size})
+    and (min-height: #{$min-mobile-size})
+    and (max-height: #{$max-mobile-size})
+    and (-webkit-min-device-pixel-ratio: 1)
+    {
+      @content;
+    }
+}
+
+/* Normal tablets */
+@mixin responsiveLayoutTablet
+{
+  @media (min-width: #{$min-tablet-size})
+    and (max-width: #{$max-tablet-size})
+    and (min-height: #{$min-tablet-size})
+    and (max-height: #{$max-tablet-size})
+    and (-webkit-min-device-pixel-ratio: 1)
+  {
+    @content;
+  }
+}
+
+/* Big tablets and tablets in landscape mode */
+@mixin responsiveLayoutBigTablet()
+{
+  @media (min-width: #{$min-tablet-size})
+    and (max-width: #{$max-landscape-tablet-size})
+    and (min-height: #{$min-tablet-size})
+    and (max-height: #{$max-landscape-tablet-size})
+    and (-webkit-min-device-pixel-ratio: 2)
+    {
+      @content;
+    }
+}
+
+/* Nexus 7 */
+@mixin responsiveLayoutNexusSeven()
+{
+  @media (min-width: #{$min-tablet-nexus-size})
+    and (max-width: #{$max-tablet-nexus-size})
+    and (min-height: #{$min-tablet-nexus-size})
+    and (max-height: #{$max-tablet-nexus-size})
+    and (-webkit-min-device-pixel-ratio: 1)
+  {
+    @content;
+  }
+}
+
+// Fonts
 @import url('https://fonts.googleapis.com/css?family=Indie+Flower');
 
 html
 {
   height: 100%;
+  width: 100%;
+  overflow: hidden;
   margin: 0;
   padding: 0;
 }
@@ -16,10 +82,15 @@ body
   font-size: 67.5%;
 }
 
+a
+{
+  text-decoration: none;
+  color: black;
+}
+
 .site-container
 {
   background-image: url("../images/bg-wood-04.jpg");
-  //background-color: lightgreen;
   background-size: cover;
   margin: 0;
   padding: 0;
@@ -29,11 +100,11 @@ body
 
 .content-container
 {
-  width: 80%;
-  height: 80%;
+  width: 70%;
+  min-height: 80%;
   margin: auto;
   margin-top: 5rem;
-  //background-color: rgba(210,233,241, 0.75);
+
   background-color: rgba(210,233,241, 0.75);
   border-radius: 0.5rem;
 
@@ -45,9 +116,10 @@ body
 {
   position: relative;
   width: 100%;
+  margin-top: 1rem;
 }
 
-h1
+.game-message h1
 {
   font-size: 3rem;
   display: inline-block;
@@ -99,6 +171,7 @@ h1
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 1;
 
   -webkit-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
   -moz-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
@@ -134,6 +207,7 @@ h1
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 1;
 
   -webkit-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
   -moz-transition: width $scaleInSpeed, height $scaleInSpeed, top $scaleInSpeed, left $scaleInSpeed;
@@ -152,6 +226,7 @@ h1
   height: 100px;
   top: 0;
   left: 0;
+  animation: zIndex 0.2s linear;
 }
 
 @-webkit-keyframes rotating
@@ -190,6 +265,18 @@ h1
   }
 }
 
+@keyframes zIndex
+{
+  from
+  {
+    z-index: 100;
+  }
+  to
+  {
+    z-index: 0;
+  }
+}
+
 .winning
 {
   -webkit-animation: rotating 2s linear infinite;
@@ -223,8 +310,105 @@ h1
   display: inline-block;
 }
 
+.js-retry-container
+{
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.js-retry-button
+{
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: green;
+  width: 12.5%;
+
+  font-size: 2rem;
+
+  margin: auto;
+
+  cursor: pointer;
+  transition: background-color 0.2s linear;
+}
+
+.js-retry-button:hover
+{
+  background-color: #25b725;
+}
+
+.js-disabled-button
+{
+  pointer-events: none;
+  background-color: grey;
+}
+
 .footer-content
 {
   margin: auto;
   font-size: 2rem;
+  padding: 0.5rem;
+}
+
+.footer-content a:hover
+{
+  text-decoration: underline;
+}
+
+@include responsiveLayoutMobile()
+{
+  html
+  {
+    overflow: auto;
+  }
+  .content-container
+  {
+    width: 95%;
+    height: auto;
+    margin-top: 0.5rem;
+  }
+
+  .game-message
+  {
+    width: 90%;
+  }
+
+  .tile-container
+  {
+    width: 250px;
+    height: 250px;
+  }
+
+  .tile
+  {
+    width: 72px;
+    height: 72px;
+  }
+
+  .game-message h1
+  {
+    font-size: 1.4rem;
+  }
+
+  .game-message span
+  {
+    width: 50px;
+    height: 50px;
+  }
+
+  .footer-content
+  {
+    font-size: 1rem;
+  }
+
+  .scaled
+  {
+    width: 75px;
+    height: 75px;
+  }
+
+  .js-retry-button
+  {
+    min-width: 90%;
+  }
 }
