@@ -46,39 +46,8 @@
 
   var gameState = GameState.IN_PROGRESS;
   var playerTurn = PlayerTurn.X_TURN;
-
   var gridOfTiles = create2DGrid();
-  //createTile();
-  //access2DArray();
-  //createTiles();
 
-/*
-  function createTiles()
-  {
-    let tileContainer = document.getElementById("tile-container");
-    tileContainer.innerHTML = ""; // for reset game
-    tileContainer.addEventListener('click', objectFinder, false);
-
-    for (let i = 0; i < amountOfTiles; i++)
-    {
-      let tile = document.createElement("div");
-      tile.setAttribute("class", "tile");
-      tile.setAttribute("id", "tile-parent-" + i);
-
-      let tileInnerChild = document.createElement("div");
-      tileInnerChild.setAttribute("id", "tile-child-" + i);
-
-      let spanInnerChild = document.createElement("span");
-      spanInnerChild.setAttribute("class", "tile-userinput");
-
-      tile.appendChild(tileInnerChild);
-      tileInnerChild.appendChild(spanInnerChild);
-
-      tileContainer.appendChild(tile);
-      tileArray.push(spanInnerChild);
-    }
-  }
-*/
   function objectFinder(event)
   {
     let e = window.event || event;
@@ -88,7 +57,6 @@
 
     if(targetTile.userInput == UserInput.EMPTY && gameState == GameState.IN_PROGRESS)
     {
-      //checkWhoIsNext(tileInnerElement, tileUserInput);
       checkWhoIsNext(targetTile);
     }
   }
@@ -100,8 +68,8 @@
     gameMessageSheep.className = "tile-x-gamemessage";
     gameState = GameState.IN_PROGRESS;
     playerTurn = PlayerTurn.X_TURN;
-    tileArray = []
-    createTiles();
+    gridOfTiles = []
+    create2DGrid();
   }
 
   function checkWhoIsNext(targetTile)
@@ -133,11 +101,11 @@
     let resultDiagonalTwoWinner = isDiagonalWinner(2, 4, 6);
     let resultGameDraw = isGameDraw();
     */
+
     if(resultHorizontalWinner.length > 0)
     {
       winnerTiles = resultHorizontalWinner;
     }
-    /*
     else if (resultVerticalWinner.length > 0)
     {
       winnerTiles = resultVerticalWinner;
@@ -150,7 +118,6 @@
     {
       winnerTiles = resultDiagonalTwoWinner;
     }
-    */
     else
     {
       winnerTiles = [];
@@ -188,60 +155,32 @@
 
   function isHorizontalWinner()
   {
-    /*
     let winningTiles = [];
-    // skip rows
-    for (let i = 0; i < tileArray.length; i += 3)
+
+    for (let i = 0; i < numberOfRows; i++)
     {
-      let firstTileInput = tileArray[i + 0];
-      let secondTileInput = tileArray[i + 1];
-      let thirdTileInput = tileArray[i + 2];
+      winningTiles = [];
+      let tileToCompareTo = gridOfTiles[i][0].userInput;
 
-
-      if(firstTileInput.innerHTML != "" || secondTileInput.innerHTML != "" || thirdTileInput.innerHTML != "")
+      if(tileToCompareTo != 0)
       {
-        if(firstTileInput.innerHTML === secondTileInput.innerHTML && secondTileInput.innerHTML === thirdTileInput.innerHTML)
+        for (let j = 0; j < numberOfColumns; j++)
         {
-          winningTiles.push(firstTileInput, secondTileInput, thirdTileInput);
-          return winningTiles;
+          let tileToBeCompared = gridOfTiles[i][j].userInput;
+
+          if(tileToCompareTo == tileToBeCompared)
+          {
+            winningTiles.push(tileToBeCompared);
+
+            if(winningTiles.length == numberOfColumns)
+            {
+              return winningTiles;
+            }
+          }
         }
       }
     }
-    return winningTiles;
-    */
-
-    let winningTiles = [];
-
-    for (let i = 0; i < gridOfTiles.length; i++)
-    {
-      if(gridOfTiles[i][0].userInput != 0 || gridOfTiles[i][1].userInput != 0 || gridOfTiles[i][2].userInput != 0)
-      {
-        if(gridOfTiles[i][0].userInput === gridOfTiles[i][1].userInput && gridOfTiles[i][1].userInput === gridOfTiles[i][2].userInput)
-        {
-          winningTiles.push(gridOfTiles[i][0], gridOfTiles[i][1], gridOfTiles[i][2]);
-          return winningTiles;
-        }
-      }
-    }
-    return winningTiles;
-  }
-
-  function checkWinnerHorizontal()
-  {
-    let winningTiles = [];
-
-    for (let i = 0; i < gridOfTiles.length; i++)
-    {
-      if(gridOfTiles[i][0].userInput != 0 || gridOfTiles[i][1].userInput != 0 || gridOfTiles[i][2].userInput != 0)
-      {
-        if(gridOfTiles[i][0].userInput === gridOfTiles[i][1].userInput && gridOfTiles[i][1].userInput === gridOfTiles[i][2].userInput)
-        {
-          winningTiles.push(gridOfTiles[i][0], gridOfTiles[i][1], gridOfTiles[i][2]);
-          return winningTiles;
-        }
-      }
-    }
-    return winningTiles;
+    return [];
   }
 
   function isVerticalWinner()
@@ -288,9 +227,9 @@
 
   function isGameDraw()
   {
-    for (let i = 0; i < tileArray.length; i++)
+    for (let i = 0; i < gridOfTiles.length; i++)
     {
-      if(tileArray[i].innerHTML == "")
+      if(tileArray[i].userInput == UserInput.EMPTY)
       {
         return false;
       }
@@ -410,42 +349,6 @@
 
     }
   }
-
-/*
-  function access2DArray()
-  {
-    let array = create2DGrid();
-    let object = array[0][2];
-    object.userInput = 1;
-  }
-*/
-/*
-  function createTile()
-  {
-
-    let tileContainer = document.getElementById("tile-container");
-    tileContainer.innerHTML = ""; // for reset game
-    tileContainer.addEventListener('click', objectFinder, false);
-
-    for (let i = 0; i < amountOfTiles; i++)
-    {
-      let tile =
-      {
-        outerDiv : document.createElement("div"),
-        innerDiv : document.createElement("div"),
-        userInput : null
-      }
-
-      tile.outerDiv.setAttribute("class", "tile");
-      tile.outerDiv.setAttribute("id", "tile-parent-" + i);
-
-      tile.innerDiv.setAttribute("id", "tile-child-" + i);
-
-      tile.outerDiv.appendChild(tile.innerDiv);
-      tileContainer.appendChild(tile.outerDiv);
-    }
-  }
-  */
 
 })
 ();
