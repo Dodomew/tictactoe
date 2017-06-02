@@ -14,6 +14,8 @@
 (function() // avoid global vars
 {
   var amountOfTiles = 9;
+  var numberOfColumns = 3;
+  var numberOfRows = 3;
   var tileArray = [];
   var gameMessage = document.getElementById("game-message");
   var gameMessageSheep = document.getElementById("game-message-sheep");
@@ -35,11 +37,22 @@
     O_TURN : 1,
   }
 
+  var UserInput =
+  {
+    EMPTY : 0,
+    BLACK_SHEEP : 1,
+    WHITE_SHEEP : 2,
+  };
+
   var gameState = GameState.IN_PROGRESS;
   var playerTurn = PlayerTurn.X_TURN;
 
-  createTiles();
+  var gridOfTiles = create2DGrid();
+  //createTile();
+  //access2DArray();
+  //createTiles();
 
+/*
   function createTiles()
   {
     let tileContainer = document.getElementById("tile-container");
@@ -65,17 +78,18 @@
       tileArray.push(spanInnerChild);
     }
   }
-
+*/
   function objectFinder(event)
   {
     let e = window.event || event;
     let targetId = e.srcElement.id;
-    let tileInnerElement = document.getElementById(targetId).children[0];
-    let tileUserInput = tileInnerElement.children[0];
 
-    if(tileUserInput.innerHTML == "" && gameState == GameState.IN_PROGRESS)
+    let targetTile = whichTileWasClicked(gridOfTiles, targetId);
+
+    if(targetTile.userInput == UserInput.EMPTY && gameState == GameState.IN_PROGRESS)
     {
-      checkWhoIsNext(tileInnerElement, tileUserInput);
+      //checkWhoIsNext(tileInnerElement, tileUserInput);
+      checkWhoIsNext(targetTile);
     }
   }
 
@@ -90,19 +104,19 @@
     createTiles();
   }
 
-  function checkWhoIsNext(clickedElement, clickedElementUserInput)
+  function checkWhoIsNext(targetTile)
   {
-    if(clickedElementUserInput.innerHTML == "")
+    if(targetTile.userInput == 0)
     {
       var randomTransformDegrees = getRandomInt(0,35);
 
       if(playerTurn == PlayerTurn.X_TURN)
       {
-        playerXTurn(clickedElement, clickedElementUserInput, randomTransformDegrees);
+        playerXTurn(targetTile, randomTransformDegrees);
       }
       else
       {
-        playerOTurn(clickedElement, clickedElementUserInput, randomTransformDegrees);
+        playerOTurn(targetTile, randomTransformDegrees);
       }
       retryButton.classList.remove("js-disabled-button");
       whoIsWinner();
@@ -113,15 +127,17 @@
   {
     let winnerTiles;
     let resultHorizontalWinner = isHorizontalWinner();
+    /*
     let resultVerticalWinner = isVerticalWinner();
     let resultDiagonalOneWinner = isDiagonalWinner(0, 4, 8);
     let resultDiagonalTwoWinner = isDiagonalWinner(2, 4, 6);
     let resultGameDraw = isGameDraw();
-
+    */
     if(resultHorizontalWinner.length > 0)
     {
       winnerTiles = resultHorizontalWinner;
     }
+    /*
     else if (resultVerticalWinner.length > 0)
     {
       winnerTiles = resultVerticalWinner;
@@ -134,17 +150,18 @@
     {
       winnerTiles = resultDiagonalTwoWinner;
     }
+    */
     else
     {
       winnerTiles = [];
     }
-
+    /*
     if(resultGameDraw == true)
     {
       gameState = GameState.DRAW;
       gameMessage.innerHTML = "This game ended in a draw!";
     }
-
+    */
     if(winnerTiles.length > 0)
     {
       document.removeEventListener('click', objectFinder, true);
@@ -164,13 +181,14 @@
 
       for (let i = 0; i < winnerTiles.length; i++)
       {
-        winnerAnimateSheep(winnerTiles[i]);
+        winnerAnimateSheep(winnerTiles[i].innerDiv);
       }
     }
   }
 
   function isHorizontalWinner()
   {
+    /*
     let winningTiles = [];
     // skip rows
     for (let i = 0; i < tileArray.length; i += 3)
@@ -185,6 +203,40 @@
         if(firstTileInput.innerHTML === secondTileInput.innerHTML && secondTileInput.innerHTML === thirdTileInput.innerHTML)
         {
           winningTiles.push(firstTileInput, secondTileInput, thirdTileInput);
+          return winningTiles;
+        }
+      }
+    }
+    return winningTiles;
+    */
+
+    let winningTiles = [];
+
+    for (let i = 0; i < gridOfTiles.length; i++)
+    {
+      if(gridOfTiles[i][0].userInput != 0 || gridOfTiles[i][1].userInput != 0 || gridOfTiles[i][2].userInput != 0)
+      {
+        if(gridOfTiles[i][0].userInput === gridOfTiles[i][1].userInput && gridOfTiles[i][1].userInput === gridOfTiles[i][2].userInput)
+        {
+          winningTiles.push(gridOfTiles[i][0], gridOfTiles[i][1], gridOfTiles[i][2]);
+          return winningTiles;
+        }
+      }
+    }
+    return winningTiles;
+  }
+
+  function checkWinnerHorizontal()
+  {
+    let winningTiles = [];
+
+    for (let i = 0; i < gridOfTiles.length; i++)
+    {
+      if(gridOfTiles[i][0].userInput != 0 || gridOfTiles[i][1].userInput != 0 || gridOfTiles[i][2].userInput != 0)
+      {
+        if(gridOfTiles[i][0].userInput === gridOfTiles[i][1].userInput && gridOfTiles[i][1].userInput === gridOfTiles[i][2].userInput)
+        {
+          winningTiles.push(gridOfTiles[i][0], gridOfTiles[i][1], gridOfTiles[i][2]);
           return winningTiles;
         }
       }
@@ -246,13 +298,14 @@
     return true;
   }
 
-  function playerXTurn(clickedElement, clickedElementUserInput, randomTransformDegrees)
+  function playerXTurn(targetTile, randomTransformDegrees)
   {
-    scaleIn(clickedElement);
-    clickedElement.className += "tile-x";
-    clickedElement.style.transform = "rotate(" + randomTransformDegrees +"deg)";
+    let innerDivOfTile = targetTile.innerDiv;
+    scaleIn(innerDivOfTile);
+    innerDivOfTile.className += "tile-x";
+    innerDivOfTile.style.transform = "rotate(" + randomTransformDegrees +"deg)";
 
-    clickedElementUserInput.innerHTML = "X";
+    targetTile.userInput = 1;
 
     gameMessage.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-o-gamemessage";
@@ -260,13 +313,14 @@
     playerTurn = PlayerTurn.O_TURN;
   }
 
-  function playerOTurn(clickedElement, clickedElementUserInput,randomTransformDegrees)
+  function playerOTurn(targetTile,randomTransformDegrees)
   {
-    scaleIn(clickedElement);
-    clickedElement.className += "tile-o";
-    clickedElement.style.transform = "rotate(" + randomTransformDegrees +"deg)";
+    let innerDivOfTile = targetTile.innerDiv;
+    scaleIn(innerDivOfTile);
+    innerDivOfTile.className += "tile-o";
+    innerDivOfTile.style.transform = "rotate(" + randomTransformDegrees +"deg)";
 
-    clickedElementUserInput.innerHTML = "O";
+    targetTile.userInput = 2;
 
     gameMessage.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-x-gamemessage";
@@ -298,6 +352,100 @@
     let parentTile = winningTile.parentNode;
     parentTile.className += " winning";
   }
+
+  function create2DGrid()
+  {
+    let grid = [];
+    let gridColumn = 3;
+    let gridRow = 3;
+    let tileContainer = document.getElementById("tile-container");
+    tileContainer.innerHTML = ""; // for reset game
+    tileContainer.addEventListener('click', objectFinder, false);
+
+    for (let i = 0; i < gridRow; i++)
+    {
+      let row = [];
+
+      for (let j = 0; j < gridColumn; j++)
+      {
+        let tile =
+        {
+          outerDiv : document.createElement("div"),
+          outerDivId: "tile-parent-" + i + "-" + j,
+          outerDivClass : "tile",
+          innerDiv : document.createElement("div"),
+          innerDivId : "tile-child-" + i + "-" + j,
+          userInput : UserInput.EMPTY
+        }
+
+        tile.outerDiv.className = tile.outerDivClass;
+        tile.outerDiv.id = tile.outerDivId;
+
+        tile.innerDiv.id = tile.innerDivId;
+
+        tile.userInput = UserInput.EMPTY;
+
+        tile.outerDiv.appendChild(tile.innerDiv);
+        tileContainer.appendChild(tile.outerDiv);
+
+        row.push(tile);
+      }
+      grid.push(row);
+    }
+    return grid;
+  }
+
+  function whichTileWasClicked(grid, clickedId)
+  {
+    for (let i = 0; i < grid.length; i++)
+    {
+      for (let j = 0; j < grid.length; j++)
+      {
+        if(clickedId == grid[i][j].outerDiv.id)
+        {
+          let clickedTile = grid[i][j];
+          return clickedTile;
+        }
+      }
+
+    }
+  }
+
+/*
+  function access2DArray()
+  {
+    let array = create2DGrid();
+    let object = array[0][2];
+    object.userInput = 1;
+  }
+*/
+/*
+  function createTile()
+  {
+
+    let tileContainer = document.getElementById("tile-container");
+    tileContainer.innerHTML = ""; // for reset game
+    tileContainer.addEventListener('click', objectFinder, false);
+
+    for (let i = 0; i < amountOfTiles; i++)
+    {
+      let tile =
+      {
+        outerDiv : document.createElement("div"),
+        innerDiv : document.createElement("div"),
+        userInput : null
+      }
+
+      tile.outerDiv.setAttribute("class", "tile");
+      tile.outerDiv.setAttribute("id", "tile-parent-" + i);
+
+      tile.innerDiv.setAttribute("id", "tile-child-" + i);
+
+      tile.outerDiv.appendChild(tile.innerDiv);
+      tileContainer.appendChild(tile.outerDiv);
+    }
+  }
+  */
 
 })
 ();
