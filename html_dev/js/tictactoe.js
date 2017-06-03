@@ -16,7 +16,6 @@
   var amountOfTiles = 9;
   var numberOfColumns = 3;
   var numberOfRows = 3;
-  var tileArray = [];
   var gameMessage = document.getElementById("game-message");
   var gameMessageSheep = document.getElementById("game-message-sheep");
 
@@ -68,8 +67,7 @@
     gameMessageSheep.className = "tile-x-gamemessage";
     gameState = GameState.IN_PROGRESS;
     playerTurn = PlayerTurn.X_TURN;
-    gridOfTiles = []
-    create2DGrid();
+    gridOfTiles = create2DGrid();
   }
 
   function checkWhoIsNext(targetTile)
@@ -95,12 +93,9 @@
   {
     let winnerTiles;
     let resultHorizontalWinner = isHorizontalWinner();
-    /*
     let resultVerticalWinner = isVerticalWinner();
-    let resultDiagonalOneWinner = isDiagonalWinner(0, 4, 8);
-    let resultDiagonalTwoWinner = isDiagonalWinner(2, 4, 6);
+    let resultDiagonalOneWinner = isDiagonalWinner();
     let resultGameDraw = isGameDraw();
-    */
 
     if(resultHorizontalWinner.length > 0)
     {
@@ -114,21 +109,17 @@
     {
       winnerTiles = resultDiagonalOneWinner;
     }
-    else if(resultDiagonalTwoWinner.length > 0)
-    {
-      winnerTiles = resultDiagonalTwoWinner;
-    }
     else
     {
       winnerTiles = [];
     }
-    /*
+
     if(resultGameDraw == true)
     {
       gameState = GameState.DRAW;
       gameMessage.innerHTML = "This game ended in a draw!";
     }
-    */
+
     if(winnerTiles.length > 0)
     {
       document.removeEventListener('click', objectFinder, true);
@@ -160,15 +151,15 @@
     for (let i = 0; i < numberOfRows; i++)
     {
       winningTiles = [];
-      let tileToCompareTo = gridOfTiles[i][0].userInput;
+      let tileToCompareTo = gridOfTiles[i][0];
 
-      if(tileToCompareTo != 0)
+      if(tileToCompareTo.userInput != UserInput.EMPTY)
       {
         for (let j = 0; j < numberOfColumns; j++)
         {
-          let tileToBeCompared = gridOfTiles[i][j].userInput;
+          let tileToBeCompared = gridOfTiles[i][j];
 
-          if(tileToCompareTo == tileToBeCompared)
+          if(tileToCompareTo.userInput == tileToBeCompared.userInput)
           {
             winningTiles.push(tileToBeCompared);
 
@@ -186,52 +177,81 @@
   function isVerticalWinner()
   {
     let winningTiles = [];
-    // skip columns
-    for (let i = 0; i < 3; i++)
-    {
-      let firstTileInput = tileArray[i + 0];
-      let secondTileInput = tileArray[i + 3];
-      let thirdTileInput = tileArray[i + 6];
 
-      if(firstTileInput.innerHTML != "" || secondTileInput.innerHTML != "" || thirdTileInput.innerHTML != "")
+    for (let i = 0; i < numberOfColumns; i++)
+    {
+      winningTiles = [];
+      let tileToCompareTo = gridOfTiles[0][i];
+
+      if(tileToCompareTo.userInput != UserInput.EMPTY)
       {
-        if(firstTileInput.innerHTML === secondTileInput.innerHTML && secondTileInput.innerHTML === thirdTileInput.innerHTML)
+        for (let j = 0; j < numberOfRows; j++)
         {
-          winningTiles.push(firstTileInput, secondTileInput, thirdTileInput);
-          return winningTiles;
+          let tileToBeCompared = gridOfTiles[j][i];
+
+          if(tileToCompareTo.userInput == tileToBeCompared.userInput)
+          {
+            winningTiles.push(tileToBeCompared);
+
+            if(winningTiles.length == numberOfColumns)
+            {
+              return winningTiles;
+            }
+          }
         }
       }
     }
-    return winningTiles;
+    return [];
   }
 
-  function isDiagonalWinner(firstTileIndex, secondTileIndex, thirdTileIndex)
+  function isDiagonalWinner()
   {
-    let winningTiles = [];
-    let firstTileInput = tileArray[firstTileIndex];
-    let secondTileInput = tileArray[secondTileIndex];
-    let thirdTileInput = tileArray[thirdTileIndex];
+    let winningTilesDiagonal = [];
+    let winningTilesDiagonalMirrored = [];
 
-    if(firstTileInput.innerHTML != "" || secondTileInput.innerHTML != "" || thirdTileInput.innerHTML != "")
+    let tileToCompareTo = gridOfTiles[0][0];
+    let tileToCompareToMirrored = gridOfTiles[0][numberOfRows - 1];
+
+    let i;
+    let j;
+
+    for (i = 0, j = numberOfRows - 1; i < numberOfColumns; i++, j--)
     {
-      let winningTiles = [];
+      let tileToBeCompared = gridOfTiles[i][i];
+      let tileToBeComparedMirrored = gridOfTiles[i][j];
 
-      if(firstTileInput.innerHTML === secondTileInput.innerHTML && secondTileInput.innerHTML === thirdTileInput.innerHTML)
+      if(tileToCompareTo.userInput == tileToBeCompared.userInput && tileToBeCompared.userInput != UserInput.EMPTY)
       {
-        winningTiles.push(firstTileInput, secondTileInput, thirdTileInput);
-        return winningTiles;
+        winningTilesDiagonal.push(tileToBeCompared);
+      }
+
+      if(tileToCompareToMirrored.userInput == tileToBeComparedMirrored.userInput && tileToBeComparedMirrored.userInput != UserInput.EMPTY)
+      {
+        winningTilesDiagonalMirrored.push(tileToBeComparedMirrored);
+      }
+
+      if(winningTilesDiagonal.length == numberOfColumns)
+      {
+        return winningTilesDiagonal;
+      }
+      else if (winningTilesDiagonalMirrored.length == numberOfColumns)
+      {
+        return winningTilesDiagonalMirrored;
       }
     }
-    return winningTiles;
+    return [];
   }
 
   function isGameDraw()
   {
-    for (let i = 0; i < gridOfTiles.length; i++)
+    for (let i = 0; i < numberOfRows; i++)
     {
-      if(tileArray[i].userInput == UserInput.EMPTY)
+      for (let j = 0; j < numberOfColumns; j++)
       {
-        return false;
+        if(gridOfTiles[i][j].userInput == UserInput.EMPTY)
+        {
+          return false;
+        }
       }
     }
     return true;
@@ -244,7 +264,7 @@
     innerDivOfTile.className += "tile-x";
     innerDivOfTile.style.transform = "rotate(" + randomTransformDegrees +"deg)";
 
-    targetTile.userInput = 1;
+    targetTile.userInput = UserInput.BLACK_SHEEP;
 
     gameMessage.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-o-gamemessage";
@@ -259,7 +279,7 @@
     innerDivOfTile.className += "tile-o";
     innerDivOfTile.style.transform = "rotate(" + randomTransformDegrees +"deg)";
 
-    targetTile.userInput = 2;
+    targetTile.userInput = UserInput.WHITE_SHEEP;
 
     gameMessage.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-x-gamemessage";
@@ -288,7 +308,7 @@
 
   function winnerAnimateSheep(winningTile)
   {
-    let parentTile = winningTile.parentNode;
+    let parentTile = winningTile;
     parentTile.className += " winning";
   }
 
@@ -346,7 +366,6 @@
           return clickedTile;
         }
       }
-
     }
   }
 
