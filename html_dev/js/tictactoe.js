@@ -13,10 +13,38 @@
 
 (function() // avoid global vars
 {
+  class Tile
+  {
+    constructor(i, j, tileContainer)
+    {
+      this.i = i;
+      this.j = j;
+
+      this.outerDiv = document.createElement("div");
+      this.outerDivId = "tile-parent-" + i + "-" + j;
+      this.outerDivClass = "tile";
+
+      this.innerDiv = document.createElement("div");
+      this.innerDivId = "tile-child-" + i + "-" + j;
+
+      this.userInput = UserInput.EMPTY;
+
+      // Set attributes
+
+      this.outerDiv.className = this.outerDivClass;
+      this.outerDiv.id = this.outerDivId;
+
+      this.innerDiv.id = this.innerDivId;
+
+      this.outerDiv.appendChild(this.innerDiv);
+      tileContainer.appendChild(this.outerDiv);
+    }
+  }
+
   var amountOfTiles = 9;
   var numberOfColumns = 3;
   var numberOfRows = 3;
-  var gameMessage = document.getElementById("game-message");
+  var gameMessageText = document.getElementById("game-message");
   var gameMessageSheep = document.getElementById("game-message-sheep");
 
   var retryButton = document.getElementById("js-retry-button");
@@ -25,15 +53,15 @@
   var GameState =
   {
     IN_PROGRESS : 0,
-    X_WINS : 1,
-    O_WINS : 2,
+    BLACK_SHEEP_WINS : 1,
+    WHITE_SHEEP_WINS : 2,
     DRAW : 3,
   };
 
   var PlayerTurn =
   {
-    X_TURN : 0,
-    O_TURN : 1,
+    BLACK_SHEEP_TURN : 0,
+    WHITE_SHEEP_TURN : 1,
   }
 
   var UserInput =
@@ -44,7 +72,7 @@
   };
 
   var gameState = GameState.IN_PROGRESS;
-  var playerTurn = PlayerTurn.X_TURN;
+  var playerTurn = PlayerTurn.BLACK_SHEEP_TURN;
   var gridOfTiles = create2DGrid();
 
   function objectFinder(event)
@@ -63,10 +91,10 @@
   function tryAgain()
   {
     retryButton.classList.add("js-disabled-button");
-    gameMessage.innerHTML = " starts.";
+    gameMessageText.innerHTML = " starts.";
     gameMessageSheep.className = "tile-x-gamemessage";
     gameState = GameState.IN_PROGRESS;
-    playerTurn = PlayerTurn.X_TURN;
+    playerTurn = PlayerTurn.BLACK_SHEEP_TURN;
     gridOfTiles = create2DGrid();
   }
 
@@ -76,7 +104,7 @@
     {
       var randomTransformDegrees = getRandomInt(0,35);
 
-      if(playerTurn == PlayerTurn.X_TURN)
+      if(playerTurn == PlayerTurn.BLACK_SHEEP_TURN)
       {
         playerXTurn(targetTile, randomTransformDegrees);
       }
@@ -117,30 +145,38 @@
     if(resultGameDraw == true)
     {
       gameState = GameState.DRAW;
-      gameMessage.innerHTML = "This game ended in a draw!";
+      gameMessageText.innerHTML = "This game ended in a draw!";
     }
 
     if(winnerTiles.length > 0)
     {
-      document.removeEventListener('click', objectFinder, true);
+      playerIsVictorious(winnerTiles);
+    }
 
-      if(playerTurn == PlayerTurn.X_TURN)
-      {
-        gameState = GameState.O_WINS;
-        gameMessageSheep.className = " tile-o-gamemessage";
-        gameMessage.innerHTML = " has won!";
-      }
-      else
-      {
-        gameState = GameState.X_WINS;
-        gameMessageSheep.className = " tile-x-gamemessage";
-        gameMessage.innerHTML = " has won!";
-      }
+    nextPlayer();
 
-      for (let i = 0; i < winnerTiles.length; i++)
-      {
-        winnerAnimateSheep(winnerTiles[i].innerDiv);
-      }
+  }
+
+  function playerIsVictorious(winningTiles)
+  {
+    document.removeEventListener('click', objectFinder, true);
+
+    if(playerTurn == PlayerTurn.BLACK_SHEEP_TURN)
+    {
+      gameState = GameState.BLACK_SHEEP_WINS;
+      gameMessageSheep.className = " tile-x-gamemessage";
+      gameMessageText.innerHTML = " has won!";
+    }
+    else
+    {
+      gameState = GameState.WHITE_SHEEP_WINS;
+      gameMessageSheep.className = " tile-o-gamemessage";
+      gameMessageText.innerHTML = " has won!";
+    }
+
+    for (let i = 0; i < winningTiles.length; i++)
+    {
+      winningTiles[i].innerDiv.className += " winning";
     }
   }
 
@@ -266,10 +302,10 @@
 
     targetTile.userInput = UserInput.BLACK_SHEEP;
 
-    gameMessage.innerHTML = "is now up.";
+    gameMessageText.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-o-gamemessage";
 
-    playerTurn = PlayerTurn.O_TURN;
+    //nextPlayer();
   }
 
   function playerOTurn(targetTile,randomTransformDegrees)
@@ -281,10 +317,22 @@
 
     targetTile.userInput = UserInput.WHITE_SHEEP;
 
-    gameMessage.innerHTML = "is now up.";
+    gameMessageText.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-x-gamemessage";
 
-    playerTurn = PlayerTurn.X_TURN;
+    //nextPlayer();
+  }
+
+  function nextPlayer()
+  {
+    if(playerTurn == PlayerTurn.BLACK_SHEEP_TURN)
+    {
+      playerTurn = PlayerTurn.WHITE_SHEEP_TURN;
+    }
+    else
+    {
+      playerTurn = PlayerTurn.BLACK_SHEEP_TURN;
+    }
   }
 
   function scaleIn(clickedElement)
@@ -306,48 +354,22 @@
     return Math.floor(Math.random() * (max - min) * 10);
   }
 
-  function winnerAnimateSheep(winningTile)
-  {
-    let parentTile = winningTile;
-    parentTile.className += " winning";
-  }
-
   function create2DGrid()
   {
     let grid = [];
-    let gridColumn = 3;
-    let gridRow = 3;
     let tileContainer = document.getElementById("tile-container");
     tileContainer.innerHTML = ""; // for reset game
     tileContainer.addEventListener('click', objectFinder, false);
 
-    for (let i = 0; i < gridRow; i++)
+    for (let i = 0; i < numberOfRows; i++)
     {
       let row = [];
 
-      for (let j = 0; j < gridColumn; j++)
+      for (let j = 0; j < numberOfColumns; j++)
       {
-        let tile =
-        {
-          outerDiv : document.createElement("div"),
-          outerDivId: "tile-parent-" + i + "-" + j,
-          outerDivClass : "tile",
-          innerDiv : document.createElement("div"),
-          innerDivId : "tile-child-" + i + "-" + j,
-          userInput : UserInput.EMPTY
-        }
+        let newTile = new Tile(i, j, tileContainer);
 
-        tile.outerDiv.className = tile.outerDivClass;
-        tile.outerDiv.id = tile.outerDivId;
-
-        tile.innerDiv.id = tile.innerDivId;
-
-        tile.userInput = UserInput.EMPTY;
-
-        tile.outerDiv.appendChild(tile.innerDiv);
-        tileContainer.appendChild(tile.outerDiv);
-
-        row.push(tile);
+        row.push(newTile);
       }
       grid.push(row);
     }
