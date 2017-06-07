@@ -117,6 +117,7 @@ a
   position: relative;
   width: 100%;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .game-message h1
@@ -125,10 +126,8 @@ a
   display: inline-block;
 }
 
-.tile-container
+#tile-container
 {
-  width: 350px;
-  height: 350px;
   position: relative;
   margin: auto;
 
@@ -137,16 +136,32 @@ a
   align-items: center;
   flex-flow: row wrap;
 
-  background-image: url("../images/grassland_board.jpg");
-  background-size: cover;
-  padding: 1rem;
-
   -webkit-box-shadow: 0px 0px 20px 1px rgba(31,31,31,1);
   -moz-box-shadow: 0px 0px 20px 1px rgba(31,31,31,1);
   box-shadow: 0px 0px 20px 1px rgba(31,31,31,1);
 }
 
-.tile
+.grid-3x3
+{
+  width: 350px;
+  height: 350px;
+
+  background-image: url("../images/grassland_board_3x3.jpg");
+  background-size: cover;
+  padding: 1rem;
+}
+
+.grid-4x4
+{
+  width: 450px;
+  height: 450px;
+
+  background-image: url("../images/grassland_board_4x4.jpg");
+  background-size: cover;
+  padding: 1rem;
+}
+
+.tile-3x3
 {
   width: 100px;
   height: 100px;
@@ -154,11 +169,14 @@ a
   position: relative;
 
   display: inline-block;
-  vertical-align: top;
-  text-align: center;
-  line-height: 100px;
+
   margin: 2px;
   font-size: 2rem;
+}
+
+.tile-4x4
+{
+  @extend .tile-3x3;
 }
 
 .tile-x
@@ -310,26 +328,34 @@ a
   display: inline-block;
 }
 
-.js-retry-container
+.js-retry-changeGrid-container
 {
-  width: 100%;
+  width: 60%;
+  margin: auto;
+
   text-align: center;
-  margin-top: 1rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.js-retry-changeGrid-button
+{
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+
+  font-size: 2rem;
+
+  cursor: pointer;
+  transition: background-color 0.2s linear;
 }
 
 .js-retry-button
 {
-  padding: 0.5rem;
-  border-radius: 0.5rem;
   background-color: green;
-  width: 12.5%;
-
-  font-size: 2rem;
-
-  margin: auto;
-
-  cursor: pointer;
-  transition: background-color 0.2s linear;
 }
 
 .js-retry-button:hover
@@ -341,6 +367,16 @@ a
 {
   pointer-events: none;
   background-color: grey;
+}
+
+.js-changeGrid-button
+{
+  background-color: green;
+}
+
+.js-changeGrid-button:hover
+{
+  background-color: #25b725;
 }
 
 .footer-content
@@ -373,16 +409,32 @@ a
     width: 90%;
   }
 
-  .tile-container
+  .grid-3x3
   {
     width: 250px;
     height: 250px;
   }
 
-  .tile
+  .grid-4x4
+  {
+    width: 250px;
+    height: 250px;
+
+    background-image: url("../images/grassland_board_4x4_250.jpg");
+  }
+
+  .tile-3x3
   {
     width: 72px;
     height: 72px;
+    margin: 1px;
+  }
+
+  .tile-4x4
+  {
+    width: 60px;
+    height: 60px;
+    margin: 1px;
   }
 
   .game-message h1
@@ -401,14 +453,28 @@ a
     font-size: 1rem;
   }
 
-  .scaled
+  .tile-3x3 .scaled
   {
     width: 75px;
     height: 75px;
   }
 
-  .js-retry-button
+  .tile-4x4 .scaled
   {
-    min-width: 90%;
+    width: 60px;
+    height: 60px;
   }
+
+  .js-retry-changeGrid-container
+  {
+    width: 100%;
+  }
+
+  .js-retry-changeGrid-button
+  {
+    padding: 0.5rem;
+
+    font-size: 1.6rem;
+  }
+
 }

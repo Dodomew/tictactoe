@@ -41,14 +41,20 @@
     }
   }
 
-  var amountOfTiles = 9;
-  var numberOfColumns = 3;
   var numberOfRows = 3;
+  var numberOfColumns = 3;
+
+  var tileContainer = document.getElementById("tile-container");
+  tileContainer.addEventListener('click', objectFinder, false);
+
   var gameMessageText = document.getElementById("game-message");
   var gameMessageSheep = document.getElementById("game-message-sheep");
 
   var retryButton = document.getElementById("js-retry-button");
   retryButton.addEventListener('click', tryAgain, false);
+
+  var changeGridButton = document.getElementById("js-changeGrid-button");
+  changeGridButton.addEventListener('click', switchGrid, false);
 
   var GameState =
   {
@@ -62,7 +68,7 @@
   {
     BLACK_SHEEP_TURN : 0,
     WHITE_SHEEP_TURN : 1,
-  }
+  };
 
   var UserInput =
   {
@@ -71,9 +77,16 @@
     WHITE_SHEEP : 2,
   };
 
+  var GridType =
+  {
+    GRID_3X3 : 0,
+    GRID_4X4 : 1,
+  }
+
   var gameState = GameState.IN_PROGRESS;
   var playerTurn = PlayerTurn.BLACK_SHEEP_TURN;
-  var gridOfTiles = create2DGrid();
+  var gridType = GridType.GRID_3X3;
+  var gridOfTiles = createGrid();
 
   function objectFinder(event)
   {
@@ -95,7 +108,7 @@
     gameMessageSheep.className = "tile-x-gamemessage";
     gameState = GameState.IN_PROGRESS;
     playerTurn = PlayerTurn.BLACK_SHEEP_TURN;
-    gridOfTiles = create2DGrid();
+    gridOfTiles = createGrid();
   }
 
   function checkWhoIsNext(targetTile)
@@ -304,8 +317,6 @@
 
     gameMessageText.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-o-gamemessage";
-
-    //nextPlayer();
   }
 
   function playerOTurn(targetTile,randomTransformDegrees)
@@ -319,8 +330,6 @@
 
     gameMessageText.innerHTML = "is now up.";
     gameMessageSheep.className = " tile-x-gamemessage";
-
-    //nextPlayer();
   }
 
   function nextPlayer()
@@ -346,7 +355,7 @@
 
   function randomIntFromInterval(min,max)
   {
-      return Math.floor(Math.random()*(max-min+1)+min);
+      return Math.floor(Math.random() * (max - min + 1) + min );
   }
 
   function getRandomInt(min, max)
@@ -354,12 +363,29 @@
     return Math.floor(Math.random() * (max - min) * 10);
   }
 
-  function create2DGrid()
+  function createGrid()
   {
     let grid = [];
-    let tileContainer = document.getElementById("tile-container");
+    let tileClassName;
+
     tileContainer.innerHTML = ""; // for reset game
-    tileContainer.addEventListener('click', objectFinder, false);
+
+    if(gridType == GridType.GRID_3X3)
+    {
+      numberOfRows = 3;
+      numberOfColumns = 3;
+      tileClassName = "tile-3x3";
+
+      tileContainer.className = "grid-3x3";
+    }
+    else
+    {
+      numberOfRows = 4;
+      numberOfColumns = 4;
+      tileClassName = "tile-4x4";
+
+      tileContainer.className = "grid-4x4";
+    }
 
     for (let i = 0; i < numberOfRows; i++)
     {
@@ -368,12 +394,29 @@
       for (let j = 0; j < numberOfColumns; j++)
       {
         let newTile = new Tile(i, j, tileContainer);
+        newTile.outerDiv.className = tileClassName;
 
         row.push(newTile);
       }
       grid.push(row);
     }
     return grid;
+  }
+
+  function switchGrid()
+  {
+    if(gridType == GridType.GRID_3X3)
+    {
+      gridType = GridType.GRID_4X4;
+      changeGridButton.innerHTML = "Switch to 3x3 grid";
+      tryAgain();
+    }
+    else
+    {
+      gridType = GridType.GRID_3X3;
+      changeGridButton.innerHTML = "Switch to 4x4 grid";
+      tryAgain();
+    }
   }
 
   function whichTileWasClicked(grid, clickedId)
